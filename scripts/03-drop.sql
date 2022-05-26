@@ -1,0 +1,12 @@
+drop stream icao_to_aircraft_stream;
+drop stream icao_to_aircraft_rekey;
+DROP TABLE icao_to_aircraft;
+drop stream callsign_details_stream;
+drop stream callsign_details_rekey;
+DROP TABLE callsign_details;
+drop stream location_stream;
+drop stream ident_stream;
+drop stream location_and_details_stream;
+drop table locationtable;
+drop stream ident_callsign_stream;
+drop table callsigntable;
