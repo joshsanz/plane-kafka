@@ -2,7 +2,7 @@
 
 * Install dump1090
 ```
-git clone https://github.com/antirez/dump1090.git
+git clone https://github.com/MalcolmRobb/dump1090.git
 cd dump1090
 sudo apt-get install rtl-sdr librtlsdr-dev pkgconf
 #
@@ -22,3 +22,6 @@ being avilable for all users. The `udevadm` command is supposed to
 reload the udev rules after the `sed` command has changed the file. If
 you get a permission denied, just reboot your system or figure out how
 to restart udev manually.
+
+Although the dump1090 at `git clone https://github.com/antirez/dump1090.git` is more recent and more official, it does not decode the lat/long as needd.
+
