@@ -1,0 +1,5 @@
+docker run --network plane-kafka_default --tty --interactive --rm \
+          confluentinc/cp-kafkacat \
+          kafkacat -b confluent:9092 \
+          -C -t location-topic \
+          -o beginning
