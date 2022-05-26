@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # ./dump1090 --net | python ../share/pollandpicture.py
 
@@ -18,6 +18,7 @@ from subprocess import call
 
 # constants and globals
 cDump1080="/home/pi/dump1090/dump1090"
+cDump1080="/usr/local/bin/dump1090"
  
 def formNumber (pInputText):
     try:
@@ -29,7 +30,7 @@ def formText (pInputText):
     return pInputText.replace('\r', '')
 
 def printStuff (pText):
-     print "{:%Y%m%d %H:%M:%S} {}".format(datetime.now(), pText)
+     print( "{:%Y%m%d %H:%M:%S} {}".format(datetime.now(), pText) )
 
 ################################################################################ 
 # Setup
@@ -40,14 +41,14 @@ vSnapMode = 0
 try:
     opts, args = getopt.getopt(sys.argv[1:],"sda:b:", ["verbose", "debug="] )
 except getopt.GetoptError:
-    print 'plane-kafka.py [-v|--verbose] [-d XX|--debug=]'
+    print ( 'plane-kafka.py [-v|--verbose] [-d XX|--debug=]' )
     sys.exit(2)
 for opt, arg in opts:
     if opt in ('-d', '--debug') :
         vDebugMode = 1
         vDebugFile = arg
         if not os.path.isfile(vDebugFile):
-          print "File {} does not exist".format(vDebugFile)
+          print ( "File {} does not exist".format(vDebugFile) )
           sys.exit(2)
     elif opt in ('-v', '--verbose') :
         vVerboseMode = 1
@@ -55,7 +56,7 @@ for opt, arg in opts:
 if vDebugMode == 0: 
     sproc = subprocess.Popen(cDump1080, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 else:
-    print '*** DEBUG MODE ***'
+    print ( '*** DEBUG MODE ***' )
     sproc = subprocess.Popen('cat {}'.format(vDebugFile), shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
@@ -71,9 +72,10 @@ while True:
         time.sleep(.01)
 
     line = sproc.stdout.readline()
-    textblock = textblock + line
+    textblock = textblock + line.decode("utf-8") 
     
     if len(line) == 1:
+
         # Start of block of info
         searchICAO = re.search( r'(ICAO Address   : )(.*$)', textblock, re.M|re.I)
         searchFeet = re.search( r'(Altitude : )(.*)(feet)(.*$)', textblock, re.M|re.I)
@@ -88,7 +90,10 @@ while True:
             call(["./send_kafka",  "ident-topic", valICAO, valIdent])
             #storeAndRefineICAOandCode(valICAO, valIdent)
  
-        if searchFeet and searchICAO and searchLatitude and searchLongitude:
+        if searchFeet and searchICAO and searchLatitude and searchLongitude \
+           and not ( 'not decoded' in searchLatitude.group(2)) \
+           and not ( 'not decoded' in searchLongitude.group(2)):
+
             # Found a valid combination 
             valICAO = formText(searchICAO.group(2))
             valFeet = formNumber(searchFeet.group(2))
