@@ -43,6 +43,6 @@ KAFKA_TOPIC=${1}
 curl -s -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" \
    -H "Accept: application/vnd.kafka.v2+json" \
    --data "${DATA}" \
-   "${REST_URL}/topics/${KAFKA_TOPIC}"  > /dev/null 2>&1
-
+   "${REST_URL}/topics/${KAFKA_TOPIC}"  >> kafka_REST.log 2>&1
+echo "\n" >> kafka_REST.log
 # echo

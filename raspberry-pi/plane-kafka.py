@@ -60,6 +60,9 @@ else:
     sproc = subprocess.Popen('cat {}'.format(vDebugFile), shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
+# Create/clear log file for REST calls
+call(["cp", "kafka_REST.log", "kafka_REST.log.old"])
+call(["touch", "kafka_REST.log"])
 
 
 ################################################################################ 
