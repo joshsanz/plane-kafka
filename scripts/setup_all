@@ -1,0 +1,8 @@
+confluent start
+./01_setup_topics
+./02_do_load
+ksql --file ./03_ksql.sql
+./04_elastic_dynamic_template
+./05_set_connect
+
+confluent stop

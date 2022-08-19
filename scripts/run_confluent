@@ -1,0 +1,7 @@
+
+echo "BRINGING UP CONFLUENT"
+confluent start
+echo "WAITING"
+sleep infinity &
+wait $!
+echo "END WAIT"

@@ -2,7 +2,7 @@
 version: '2'
 services:
   confluent:
-    image: 'simonaubury/ksql-clickstream-plane:latest'
+    image: 'ksql-clickstream-plane:latest'
     build:
       context: docker/
     hostname: confluent
@@ -13,12 +13,15 @@ services:
       - "9581-9585:9581-9585"
       - "9092:9092"
       - '8088:8088'
-    command: "tail -f /dev/null"
+    command: "/bin/sh -c /scripts/run_confluent"
     environment:
       TZ: ${TZ_SET}
     volumes:
       - ./scripts:/scripts
       - ./raspberry-pi:/raspberry-pi
+      - zk-data:/var/lib/zookeeper/data
+      - zk-txn-logs:/var/lib/zookeeper/log
+      - kafka-data:/var/lib/kafka/data
     extra_hosts:
       - "moby:127.0.0.1"
 
@@ -49,3 +52,11 @@ services:
       - elasticsearch
     extra_hosts:
       - "moby:127.0.0.1"
+
+volumes:
+  zk-data:
+    external: true
+  zk-txn-logs:
+    external: true
+  kafka-data:
+    external: true
