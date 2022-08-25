@@ -144,6 +144,9 @@ services:
       - ksqldb-server
     entrypoint: /bin/sh
     tty: true
+    volumes:
+      - ./scripts/03_ksql.sql:/scripts/03_ksql.sql
+      - ./scripts/03-drop.sql:/scripts/03-drop.sql
 
   ksql-datagen:
     image: confluentinc/ksqldb-examples:7.2.1

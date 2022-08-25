@@ -62,7 +62,7 @@ cdProducer = AvroProducer({
 with open("icao-to-aircraft.json.sample") as f:
     for i2a_val_str in f.readlines():
         i2a_val = json.loads(i2a_val_str)
-        i2aProducer.produce(topic='icao-to-aircraft', value=i2a_val, key="")
+        i2aProducer.produce(topic='icao-to-aircraft', value=i2a_val,)
 i2aProducer.flush()
 i2a_vals = []  # clear this because it may be a very large list
 
@@ -70,5 +70,5 @@ i2a_vals = []  # clear this because it may be a very large list
 with open("callsign-details.json") as f:
     for cd_val_str in f.readlines():
         cd_val = json.loads(cd_val_str)
-        cdProducer.produce(topic='callsign-details', value=cd_val, key="")
+        cdProducer.produce(topic='callsign-details', value=cd_val,)
 cdProducer.flush()
