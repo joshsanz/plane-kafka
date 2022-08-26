@@ -187,7 +187,7 @@ services:
 
 
   elasticsearch:
-    image: 'docker.elastic.co/elasticsearch/elasticsearch-oss:${ELST_VER}'
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:${ELST_VER}'
     hostname: elasticsearch
     ports:
       - "9200:9200"
@@ -202,14 +202,13 @@ services:
       - "moby:127.0.0.1"
 
   kibana:
-    image: 'docker.elastic.co/kibana/kibana-oss:${ELST_VER}'
+    image: 'docker.elastic.co/kibana/kibana:${ELST_VER}'
     volumes:
       - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
     hostname: kibana
     environment:
       TZ: ${TZ_SET}
-      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
-      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      KBN_PATH_CONF: /usr/share/kibana/config
     ports:
       - "5601:5601"
     depends_on:
