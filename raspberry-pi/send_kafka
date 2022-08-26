@@ -11,7 +11,7 @@ export http_proxy
 export https_proxy
 
 if [ -z ${HOST_IP} ]; then
-  HOST_IP=192.168.1.129
+  HOST_IP=localhost
 fi
 
 REST_URL=http://${HOST_IP}:8082

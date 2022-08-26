@@ -23,7 +23,7 @@ playbackFile = ""
 def formNumber(pInputText):
     try:
         return float(pInputText.replace('\r', ''))
-    except:
+    except ValueError:
         return float(0)
 
 
@@ -32,7 +32,7 @@ def formText(pInputText):
 
 
 def printStuff(pText):
-     print("{:%Y%m%d %H:%M:%S} {}".format(datetime.now(), pText))
+    print("{:%Y%m%d %H:%M:%S} {}".format(datetime.now(), pText))
 
 
 ################################################################################
@@ -89,11 +89,11 @@ while True:
     textblock = textblock + line.decode("utf-8")
     if len(line) == 1:
         # Start of block of info
-        searchICAO = re.search(r'(ICAO Address   : )(.*$)', textblock, re.M|re.I)
-        searchFeet = re.search(r'(Altitude : )(.*)(feet)(.*$)', textblock, re.M|re.I)
-        searchLatitude = re.search(r'(Latitude : )(.*$)', textblock, re.M|re.I)
-        searchLongitude = re.search(r'(Longitude: )(.*$)', textblock, re.M|re.I)
-        searchIdent = re.search(r'(Identification : )(.*$)', textblock, re.M|re.I)
+        searchICAO = re.search(r'(ICAO Address   : )(.*$)', textblock, re.M | re.I)
+        searchFeet = re.search(r'(Altitude : )(.*)(feet)(.*$)', textblock, re.M | re.I)
+        searchLatitude = re.search(r'(Latitude : )(.*$)', textblock, re.M | re.I)
+        searchLongitude = re.search(r'(Longitude: )(.*$)', textblock, re.M | re.I)
+        searchIdent = re.search(r'(Identification : )(.*$)', textblock, re.M | re.I)
 
         if searchICAO and searchIdent:
             valICAO = formText(searchICAO.group(2))
@@ -113,7 +113,7 @@ while True:
             valLongitude = formNumber(searchLongitude.group(2))
             printStuff('valICAO:{} valFeet:{} valLatitude:{} valLongitude:{}'.format(valICAO, valFeet, (valLatitude), (valLongitude)))
             # ./send_kafka location-topic ico height location
-            call(["./send_kafka",  "location-topic", valICAO, "{}".format(valFeet), "{},{}".format(valLatitude, valLongitude)])
+            call(["./send_kafka", "location-topic", valICAO, "{}".format(valFeet), "{},{}".format(valLatitude, valLongitude)])
 #            processSquark (valICAO, valFeet, (valLatitude), (valLongitude))
 
         # End of block of info

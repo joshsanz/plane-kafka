@@ -15,8 +15,8 @@ with open(args.file, "r") as f:
         # true if line is empty, delineates packet boundary
         if not line.strip():
             for cl in cur_lines:
-                print(cl.rstrip(), end=' ')
-            print("\n", flush=True)
+                print(cl.rstrip(), end='\n')
+            print("", flush=True)
             cur_lines = []
             time.sleep(args.rate)
         cur_lines.append(line)
