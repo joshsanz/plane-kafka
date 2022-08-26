@@ -59,10 +59,15 @@ cdProducer = AvroProducer({
     default_key_schema=key_schema, default_value_schema=cd_schema)
 
 # Send icao to aircraft mappings
-with open("icao-to-aircraft.json.sample") as f:
+with open("icao-to-aircraft.json") as f:
+    queued = 0
     for i2a_val_str in f.readlines():
+        queued += 1
         i2a_val = json.loads(i2a_val_str)
         i2aProducer.produce(topic='icao-to-aircraft', value=i2a_val,)
+        if queued % 5000 == 0:
+            i2aProducer.flush()
+            queued = 0
 i2aProducer.flush()
 i2a_vals = []  # clear this because it may be a very large list
 
