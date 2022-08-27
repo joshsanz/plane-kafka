@@ -3,6 +3,7 @@
 import json
 from confluent_kafka import avro
 from confluent_kafka.avro import AvroProducer
+from confluent_kafka.schema_registry import SchemaRegistryClient, Schema
 
 
 i2a_schema_str = """
@@ -32,11 +33,43 @@ cd_schema_str = """
 }
 """
 
+location_schema_str = """
+{
+    "type":"record",
+    "name":"location",
+    "fields":[
+        {"name":"ico", "type":"string"},
+        {"name":"height", "type":"string"},
+        {"name":"location", "type":"string"}
+    ]
+}
+"""
+
+identity_schema_str = """
+{
+    "type":"record",
+    "name":"ident",
+    "fields":[
+        {"name":"ico", "type":"string"},
+        {"name":"identification", "type":"string"}
+    ]
+}
+"""
+
 i2a_schema = avro.loads(i2a_schema_str)
 cd_schema = avro.loads(cd_schema_str)
 key_schema = avro.loads('{"type":"string"}')
+location_schema = Schema(location_schema_str, "AVRO")
+identity_schema = Schema(identity_schema_str, "AVRO")
 
 
+# Initialize schemas for identity, location so later table creation doesn't fail
+sr_client = SchemaRegistryClient({"url": "http://localhost:8081",})
+sr_client.register_schema("location-topic-value", location_schema)
+sr_client.register_schema("ident-topic-value", identity_schema)
+
+
+# Send ICAO/Flight number DB entries to kafka
 def delivery_report(err, msg):
     """ Called once for each message produced to indicate delivery result.
         Triggered by poll() or flush(). """
@@ -65,13 +98,13 @@ with open("icao-to-aircraft.json") as f:
         queued += 1
         i2a_val = json.loads(i2a_val_str)
         i2aProducer.produce(topic='icao-to-aircraft', value=i2a_val,)
-        if queued % 5000 == 0:
+        if queued % 10000 == 0:
             i2aProducer.flush()
             queued = 0
 i2aProducer.flush()
 i2a_vals = []  # clear this because it may be a very large list
 
-# Send callsign to destination mappings
+# Send flight number to destination mappings
 with open("callsign-details.json") as f:
     for cd_val_str in f.readlines():
         cd_val = json.loads(cd_val_str)

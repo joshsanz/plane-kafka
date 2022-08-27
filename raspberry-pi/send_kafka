@@ -22,15 +22,15 @@ ICAO=`echo ${2} | tr '[:lower:]' '[:upper:]'`
 
 if [  $# == 4 -a ${1} == "location-topic" ]; then
   # echo ${1} ${ICAO} ${3} ${4}
-  DATA='{"value_schema": "{\"type\": \"record\", \"name\": \"com.example.ident\", \"fields\": '
+  DATA='{"value_schema": "{\"type\": \"record\", \"name\": \"location\", \"fields\": '
   DATA+='[{\"name\": \"ico\", \"type\": \"string\"},{\"name\": \"height\", \"type\": \"string\"},{\"name\": \"location\", \"type\": \"string\"}]}", '
   DATA+='"records": [{"value": {"ico": "'${ICAO}'", "height": "'${3}'", "location": "'${4}'"}}]}'
 
 elif [ $# == 3 -a ${1} == "ident-topic" ]; then
-  # echo ${1} ${2} ${3} 
-  DATA='{"value_schema": "{\"type\": \"record\", \"name\": \"com.example.ident\", \"fields\": '
-  DATA+='[{\"name\": \"ico\", \"type\": \"string\"},{\"name\": \"indentification\", \"type\": \"string\"}]}", '
-  DATA+='"records": [{"value": {"ico": "'${ICAO}'", "indentification": "'${3}'"}}]}'
+  # echo ${1} ${2} ${3}
+  DATA='{"value_schema": "{\"type\": \"record\", \"name\": \"ident\", \"fields\": '
+  DATA+='[{\"name\": \"ico\", \"type\": \"string\"},{\"name\": \"identification\", \"type\": \"string\"}]}", '
+  DATA+='"records": [{"value": {"ico": "'${ICAO}'", "identification": "'${3}'"}}]}'
 
 else
   echo "Usage ${0} :  [location-topic ico height location] [ident-topic identification]  "
@@ -38,7 +38,6 @@ else
 fi
 
 KAFKA_TOPIC=${1}
-
 
 curl -s -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" \
    -H "Accept: application/vnd.kafka.v2+json" \

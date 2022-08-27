@@ -1,0 +1,19 @@
+
+{
+  "name": "es_sink_locationtable",
+  "config": {
+    "schema.ignore": "true",
+    "topics": "LOCATIONTABLE",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": false,
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "key.ignore": "true",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": false,
+    "type.name": "type.name=kafkaconnect",
+    "topic.index.map": "LOCATIONTABLE:LOCATIONTABLE",
+    "connection.url": "http://elasticsearch:9200",
+    "transforms": "FilterNulls",
+    "transforms.FilterNulls.type": "org.apache.kafka.connect.transforms.Filter"
+  }
+}

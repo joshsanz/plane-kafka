@@ -39,7 +39,7 @@ CREATE table locationtable WITH (PARTITIONS=1, value_format='JSON', key_format='
 
 -- 6. combined result, ident_stream join callsign
 -- drop stream ident_callsign_stream;
-create stream ident_callsign_stream as select i.ICO, c.operatorname, c.k_callsign, c.fromairport, c.toairport from ident_stream i left join callsign_details c on i.INDENTIFICATION = c.k_callsign;
+create stream ident_callsign_stream as select i.ICO, c.operatorname, c.k_callsign, c.fromairport, c.toairport from ident_stream i left join callsign_details c on i.IDENTIFICATION = c.k_callsign;
 
 -- drop table callsigntable;
 CREATE table callsigntable WITH (PARTITIONS=1, value_format='JSON', key_format='JSON') AS select ICO, k_callsign, operatorname, fromairport, toairport, count(*) as events from ident_callsign_stream WINDOW TUMBLING (size 10 second) group by ICO, k_callsign, operatorname, fromairport, toairport;
