@@ -1,0 +1,35 @@
+{
+  "template": "*",
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  },
+  "mappings": {
+    "dynamic_templates": [
+      {
+        "dates": {
+          "match": "EVENT_TS",
+          "mapping": {
+            "type": "date"
+          }
+        }
+      },
+      {
+        "heights": {
+          "match": "HEIGHT",
+          "mapping": {
+            "type": "float"
+          }
+        }
+      },
+      {
+        "locations": {
+          "match": "LOCATION",
+          "mapping": {
+            "type": "geo_point"
+          }
+        }
+      }
+    ]
+  }
+}

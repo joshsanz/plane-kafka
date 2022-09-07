@@ -1,0 +1,18 @@
+{
+    "name": "es-sink-location-strm",
+    "config": {
+        "topics": "LOCATION_AND_DETAILS_STREAM",
+        "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+        "key.ignore": "false",
+        "tasks.max": "1",
+        "type.name": "kafkaconnect",
+        "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "value.converter": "io.confluent.connect.avro.AvroConverter",
+        "value.converter.schema.registry.url": "http://schema-registry:8081",
+        "connection.url": "http://elasticsearch:9200",
+        "name": "es-sink-location-strm",
+        "transforms": "ExtractTimestamp",
+        "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+        "transforms.ExtractTimestamp.timestamp.field" : "EVENT_TS"
+    }
+}

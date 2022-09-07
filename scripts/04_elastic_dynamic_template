@@ -5,51 +5,24 @@ unset https_proxy
 export http_proxy
 export https_proxy
 
-HOST=elasticsearch
+HOST=localhost
 
+echo "**********"
 echo "Loading Elastic Dynamic Templates"
+echo "**********"
 
 curl -XDELETE "http://${HOST}:9200/_template/kafkaconnect/"
 echo
 echo
 
-curl -XPUT "http://${HOST}:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d'
-{
-  "template": "*",
-  "settings": {
-    "number_of_shards": 1,
-    "number_of_replicas": 0
-  },
-  "mappings": {
-    "_default_": {
-      "dynamic_templates": [
-        {
-          "dates": {
-            "match": "EVENT_TS",
-            "mapping": {
-              "type": "date"
-            }
-          }
-        },
-        {
-          "heights": {
-            "match": "HEIGHT",
-            "mapping": {
-              "type": "float"
-            }
-          }
-        },
-        {
-          "locations": {
-            "match": "LOCATION",
-            "mapping": {
-              "type": "geo_point"
-            }
-          }
-        }
-      ]
-    }
-  }
-}'
+cat ../config/es-dynamic-template.json | curl -XPUT "http://${HOST}:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d @- > dynamic_template.log
+
+if hash jq 2>/dev/null; then
+    cat dynamic_template.log | jq
+else
+    cat dynamic_template.log
+fi
+rm dynamic_template.log
 
 echo
+
